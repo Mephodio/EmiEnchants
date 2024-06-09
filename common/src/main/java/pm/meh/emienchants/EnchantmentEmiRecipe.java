@@ -4,9 +4,11 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.api.widget.TextWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -68,17 +70,43 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayWidth() {
-        return 100;
+        return 134;
     }
 
     @Override
     public int getDisplayHeight() {
-        return 30;
+        return 140;
     }
 
     @Override
     public void addWidgets(WidgetHolder widgetHolder) {
-        widgetHolder.addText(enchantment.getFullname(1), 5, 5, 0, false);
+        final int xOffset = 2;
+        final int yOffset = 2;
+        final int rowHeight = 10;
+        final int textColor = 0x333333;
+        final boolean shadow = false;
+        int row = 0;
+
+        widgetHolder.addText(Component.translatable(enchantment.getDescriptionId()),
+                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addText(Component.translatable("emienchants.property.max_level", enchantment.getMaxLevel()),
+                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+
+        TextWidget rarityWidget = widgetHolder.addText(Component.translatable("emienchants.property.rarity",
+                enchantment.getRarity().name(), enchantment.getRarity().getWeight()),
+                xOffset, yOffset + rowHeight * row, textColor, shadow);
+        widgetHolder.addTooltipText(IntStream.range(1, enchantment.getMaxLevel() + 1).mapToObj(
+                        lvl -> (Component) Component.translatable("emienchants.property.cost", lvl, enchantment.getMinCost(lvl), enchantment.getMaxCost(lvl))).toList()
+                , xOffset, yOffset + rowHeight * row++, rarityWidget.getBounds().width(), 8);
+
+        widgetHolder.addText(Component.translatable("emienchants.property.curse", enchantment.isCurse()),
+                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addText(Component.translatable("emienchants.property.discoverable", enchantment.isDiscoverable()),
+                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addText(Component.translatable("emienchants.property.tradeable", enchantment.isTradeable()),
+                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addText(Component.translatable("emienchants.property.category", enchantment.category.name()),
+                xOffset, yOffset + rowHeight * row++, textColor, shadow);
     }
 
     @Override
