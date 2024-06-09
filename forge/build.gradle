@@ -81,6 +81,10 @@ dependencies {
 
     compileOnly fg.deobf("dev.emi:emi-forge:${emi_version}:api")
     runtimeOnly fg.deobf("dev.emi:emi-forge:${emi_version}")
+
+    runtimeOnly fg.deobf("curse.maven:apotheosis-313970:5317303")
+    runtimeOnly fg.deobf("curse.maven:placebo-283644:5098182")
+    runtimeOnly fg.deobf("curse.maven:attributeslib-898963:5340012")
 }
 
 tasks.withType(JavaCompile).configureEach {
