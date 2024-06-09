@@ -18,6 +18,9 @@
     "entrypoints": {
         "main": [
             "pm.meh.emienchants.EmiEnchants"
+        ],
+        "emi": [
+            "pm.meh.emienchants.EmiEnchants.EmiPlugin"
         ]
     },
     "mixins": [
