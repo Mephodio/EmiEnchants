@@ -26,7 +26,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
 
     private final ResourceLocation enchantmentResourceLocation;
     private final Enchantment enchantment;
-    private final List<EmiIngredient> inputs;
+    private final List<EmiStack> inputs;
     private final EmiIngredient canApplyTo;
     private final EmiIngredient incompatibleSlot;
 
@@ -42,11 +42,11 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                 .map(e -> getBookForLevel(e.getKey().location(), e.getValue().getMaxLevel())).toList());
     }
 
-    private EmiIngredient getBookForLevel(int level) {
+    private EmiStack getBookForLevel(int level) {
         return getBookForLevel(enchantmentResourceLocation, level);
     }
 
-    private static EmiIngredient getBookForLevel(ResourceLocation location, int level) {
+    private static EmiStack getBookForLevel(ResourceLocation location, int level) {
         CompoundTag tagEnchantEntry = new CompoundTag();
         tagEnchantEntry.putString("id", location.toString());
         tagEnchantEntry.putShort("lvl", (short) level);
@@ -75,12 +75,12 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
 
     @Override
     public List<EmiIngredient> getInputs() {
-        return inputs;
+        return (List<EmiIngredient>) (List<? extends EmiIngredient>) inputs;
     }
 
     @Override
     public List<EmiStack> getOutputs() {
-        return List.of();
+        return inputs;
     }
 
     @Override
