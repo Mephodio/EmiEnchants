@@ -24,6 +24,12 @@ import java.util.stream.IntStream;
 
 public class EnchantmentEmiRecipe implements EmiRecipe {
 
+    private static final ResourceLocation ICON_INFO = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_info.png");
+    private static final ResourceLocation ICON_CURSE = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_curse.png");
+    private static final ResourceLocation ICON_ENCH_TABLE = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_ench_table.png");
+    private static final ResourceLocation ICON_VILLAGER = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_villager.png");
+    private static final ResourceLocation ICON_TREASURE = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_treasure.png");
+
     private final ResourceLocation enchantmentResourceLocation;
     private final Enchantment enchantment;
     private final List<EmiStack> inputs;
@@ -110,28 +116,39 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
             widgetHolder.addSlot(incompatibleSlot, xOffsetSmall, yOffset + 40);
         }
 
-        widgetHolder.addText(Component.translatable(enchantment.getDescriptionId()),
+        widgetHolder.addText(Component.translatable(enchantment.getDescriptionId()).append(String.format(" %d-%d",
+                        enchantment.getMinLevel(), enchantment.getMaxLevel())),
                 xOffset, yOffset + rowHeight * row++, textColor, shadow);
-        widgetHolder.addText(Component.translatable("emienchants.property.max_level", enchantment.getMaxLevel()),
+        widgetHolder.addText(Component.literal(enchantmentResourceLocation.getNamespace()).withStyle(ChatFormatting.DARK_BLUE),
+                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addText(Component.translatable("emienchants.property.category", enchantment.category.name()),
                 xOffset, yOffset + rowHeight * row++, textColor, shadow);
 
         TextWidget rarityWidget = widgetHolder.addText(Component.translatable("emienchants.property.rarity",
                 enchantment.getRarity().name(), enchantment.getRarity().getWeight()),
                 xOffset, yOffset + rowHeight * row, textColor, shadow);
+        widgetHolder.addTexture(ICON_INFO, xOffset + rarityWidget.getBounds().width() + 1,
+                yOffset + rowHeight * row, 7, 8, 7, 8, 7, 8, 7, 8);
         widgetHolder.addTooltipText(IntStream.range(1, enchantment.getMaxLevel() + 1).mapToObj(lvl ->
                         (Component) Component.translatable("emienchants.property.cost", lvl, enchantment.getMinCost(lvl), enchantment.getMaxCost(lvl))).toList(),
-                xOffset, yOffset + rowHeight * row++, rarityWidget.getBounds().width(), 8);
+                xOffset, yOffset + rowHeight * row++, rarityWidget.getBounds().width() + 9, 8);
 
-        widgetHolder.addText(Component.translatable("emienchants.property.category", enchantment.category.name()),
-                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addTexture(ICON_CURSE, xOffset,
+                yOffset + rowHeight * row, 7, 8, 7, 8, 7, 8, 7, 8);
         widgetHolder.addText(Component.translatable("emienchants.property.curse", enchantment.isCurse()),
-                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+                xOffset + 10, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addTexture(ICON_ENCH_TABLE, xOffset,
+                yOffset + rowHeight * row, 8, 8, 8, 8, 8, 8, 8, 8);
         widgetHolder.addText(Component.translatable("emienchants.property.discoverable", enchantment.isDiscoverable()),
-                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+                xOffset + 10, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addTexture(ICON_VILLAGER, xOffset,
+                yOffset + rowHeight * row, 8, 8, 8, 8, 8, 8, 8, 8);
         widgetHolder.addText(Component.translatable("emienchants.property.tradeable", enchantment.isTradeable()),
-                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+                xOffset + 10, yOffset + rowHeight * row++, textColor, shadow);
+        widgetHolder.addTexture(ICON_TREASURE, xOffset,
+                yOffset + rowHeight * row, 8, 8, 8, 8, 8, 8, 8, 8);
         widgetHolder.addText(Component.translatable("emienchants.property.treasure", enchantment.isTreasureOnly()),
-                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+                xOffset + 10, yOffset + rowHeight * row++, textColor, shadow);
 
         String descriptionId = enchantment.getDescriptionId() + ".desc";
         Component descriptionTranslatable = Component.translatable(descriptionId).withStyle(ChatFormatting.ITALIC);

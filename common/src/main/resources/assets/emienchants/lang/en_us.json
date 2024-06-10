@@ -1,8 +1,7 @@
 {
   "emi.category.emienchants.enchants": "Enchantment",
 
-  "emienchants.property.max_level": "Max level: %s",
-  "emienchants.property.rarity": "Rarity: %s (%s) ℹ",
+  "emienchants.property.rarity": "Rarity: %s (%s)",
   "emienchants.property.curse": "Curse: %s",
   "emienchants.property.discoverable": "Enchanting table: %s",
   "emienchants.property.tradeable": "Villagers: %s",
