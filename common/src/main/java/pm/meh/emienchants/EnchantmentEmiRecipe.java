@@ -81,7 +81,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
 
     @Override
     public List<EmiIngredient> getInputs() {
-        return (List<EmiIngredient>) (List<? extends EmiIngredient>) inputs;
+        return List.of(canApplyTo, EmiIngredient.of(inputs));
     }
 
     @Override
