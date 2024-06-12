@@ -158,8 +158,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
         // rarity
         TextWidget rarityWidget = widgetHolder.addText(Component.translatable("emienchants.property.rarity",
                         getLocalizedTextByCode(enchantment.getRarity().name(),
-                                "emienchants.property.rarity.%s").withStyle(ChatFormatting.DARK_PURPLE),
-                        enchantment.getRarity().getWeight()),
+                                "emienchants.property.rarity.%s").withStyle(ChatFormatting.DARK_PURPLE)),
                 LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
         widgetHolder.addTexture(ICON_INFO, LAYOUT_X_OFFSET + rarityWidget.getBounds().width() + 1,
                 LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row, 7, 8, 7, 8, 7, 8, 7, 8);
@@ -194,7 +193,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
         return false;
     }
 
-    private static record IconBoolStatEntry(ResourceLocation icon, String label, boolean value, boolean isPositive) {
+    private record IconBoolStatEntry(ResourceLocation icon, String label, boolean value, boolean isPositive) {
         public Component getValueLabel() {
             return Component.translatable("emienchants.property.value." + value).withStyle(
                     Style.EMPTY.withColor(value ^ isPositive ? 0xAA0000 : 0x008800));

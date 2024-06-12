@@ -1,7 +1,6 @@
 package pm.meh.emienchants;
 
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -10,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import java.util.List;
 import java.util.Locale;
 
 public class Util {
