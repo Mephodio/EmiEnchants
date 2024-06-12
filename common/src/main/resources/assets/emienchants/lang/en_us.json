@@ -7,5 +7,9 @@
   "emienchants.property.tradeable": "Villagers: %s",
   "emienchants.property.treasure": "Treasure: %s",
   "emienchants.property.category": "Category: %s",
-  "emienchants.property.cost": "Level %s cost: %s - %s"
+  "emienchants.property.cost": "Level %s cost: %s - %s",
+  "emienchants.property.conflicts": "Conflicts:",
+  "emienchants.property.applicable_to": "Applicable to:",
+
+  "emienchants.slot.subtitle.view_all": "click to view all"
 }

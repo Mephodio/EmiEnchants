@@ -110,10 +110,12 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
         int row = 0;
 
         widgetHolder.addSlot(getBookForLevel(enchantment.getMaxLevel()), xOffsetSmall, yOffset);
-        widgetHolder.addSlot(canApplyTo, xOffsetSmall, yOffset + 20);
+        widgetHolder.add(new CustomEmiSlotWidget(canApplyTo, xOffsetSmall, yOffset + 20,
+                false, Component.translatable("emienchants.property.applicable_to")));
 
         if (!incompatibleSlot.isEmpty()) {
-            widgetHolder.addSlot(incompatibleSlot, xOffsetSmall, yOffset + 40);
+            widgetHolder.add(new CustomEmiSlotWidget(incompatibleSlot, xOffsetSmall, yOffset + 40,
+                    true, Component.translatable("emienchants.property.conflicts")));
         }
 
         widgetHolder.addText(Component.translatable(enchantment.getDescriptionId()).append(String.format(" %d-%d",
