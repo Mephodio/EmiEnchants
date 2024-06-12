@@ -12,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
@@ -172,8 +173,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
     private static record IconBoolStatEntry(ResourceLocation icon, boolean value, boolean isPositive) {
         public Component getValueLabel() {
             return Component.translatable("emienchants.property.value." + value).withStyle(
-                    value ^ isPositive ? ChatFormatting.DARK_RED : ChatFormatting.DARK_GREEN
-            );
+                    Style.EMPTY.withColor(value ^ isPositive ? 0xAA0000 : 0x008800));
         }
     }
 }
