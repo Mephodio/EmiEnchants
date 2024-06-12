@@ -50,10 +50,10 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                 .filter(e -> !e.getValue().equals(enchantment) && !enchantment.isCompatibleWith(e.getValue()))
                 .map(e -> getBookForLevel(e.getKey().location(), e.getValue().getMaxLevel())).toList());
         iconStats = List.of(
-                new IconBoolStatEntry(ICON_ENCH_TABLE, enchantment.isDiscoverable(), true),
-                new IconBoolStatEntry(ICON_VILLAGER, enchantment.isTradeable(), true),
-                new IconBoolStatEntry(ICON_TREASURE, enchantment.isTreasureOnly(), false),
-                new IconBoolStatEntry(ICON_CURSE, enchantment.isCurse(), false)
+                new IconBoolStatEntry(ICON_ENCH_TABLE, "discoverable", enchantment.isDiscoverable(), true),
+                new IconBoolStatEntry(ICON_VILLAGER, "tradeable", enchantment.isTradeable(), true),
+                new IconBoolStatEntry(ICON_TREASURE, "treasure", enchantment.isTreasureOnly(), false),
+                new IconBoolStatEntry(ICON_CURSE, "curse", enchantment.isCurse(), false)
         );
     }
 
@@ -153,7 +153,9 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
         int iconYOffset = yOffset + rowHeight * row;
         for (IconBoolStatEntry stat : iconStats) {
             widgetHolder.addTexture(stat.icon, iconXOffset, iconYOffset, 8, 8, 8, 8, 8, 8, 8, 8);
-            widgetHolder.addText(stat.getValueLabel(), iconXOffset + 10, iconYOffset, textColor, shadow);
+            TextWidget statWidget = widgetHolder.addText(stat.getValueLabel(), iconXOffset + 10, iconYOffset, textColor, shadow);
+            widgetHolder.addTooltipText(List.of(Component.translatable(String.format("emienchants.property.%s.%s", stat.label, stat.value))),
+                    iconXOffset, iconYOffset, statWidget.getBounds().width() + 10, 8);
             iconXOffset += iconSectionWidth;
         }
 
