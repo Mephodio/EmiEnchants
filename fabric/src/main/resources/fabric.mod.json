@@ -1,6 +1,6 @@
 {
     "schemaVersion": 1,
-    "id": "mod_id",
+    "id": "${mod_id}",
     "version": "${version}",
     "name": "${mod_name}",
     "description": "${description}",
@@ -20,14 +20,14 @@
             "pm.meh.emienchants.EmiEnchants"
         ],
         "emi": [
-            "pm.meh.emienchants.EmiEnchants.EmiPlugin"
+            "pm.meh.emienchants.EnchantmentEmiPlugin"
         ]
     },
     "mixins": [
     ],
     "depends": {
-        "fabricloader": ">=0.14",
-        "minecraft": "1.20",
+        "emi": "*",
+        "minecraft": "${fabric_minecraft_version_range}",
         "java": ">=17"
     }
 }
