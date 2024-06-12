@@ -50,7 +50,7 @@
   "emienchants.property.category.pickaxe": "pickaxe",
   "emienchants.property.category.axe": "axe",
   "emienchants.property.category.core_armor": "chest & leg armor",
-  "emienchants.property.category.null": "nothing",
+  "emienchants.property.category.apotheosis.null": "not applicable",
 
   "emienchants.slot.subtitle.view_all": "click to view all"
 }
