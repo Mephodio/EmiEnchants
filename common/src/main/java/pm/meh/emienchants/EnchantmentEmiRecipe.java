@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static pm.meh.emienchants.Util.getBookStackForLevel;
 import static pm.meh.emienchants.Util.getLocalizedTextByCode;
@@ -162,8 +163,10 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                 LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
         widgetHolder.addTexture(ICON_INFO, LAYOUT_X_OFFSET + rarityWidget.getBounds().width() + 1,
                 LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row, 7, 8, 7, 8, 7, 8, 7, 8);
-        widgetHolder.addTooltipText(IntStream.range(1, enchantment.getMaxLevel() + 1).mapToObj(lvl ->
-                        (Component) Component.translatable("emienchants.property.cost", lvl, enchantment.getMinCost(lvl), enchantment.getMaxCost(lvl))).toList(),
+        widgetHolder.addTooltipText(Stream.concat(Stream.of(Component.translatable("emienchants.property.rarity_weight",
+                        enchantment.getRarity().getWeight())), IntStream.range(1, enchantment.getMaxLevel() + 1)
+                        .mapToObj(lvl -> (Component) Component.translatable("emienchants.property.cost", lvl,
+                                enchantment.getMinCost(lvl), enchantment.getMaxCost(lvl)))).toList(),
                 LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row++, rarityWidget.getBounds().width() + 9, 8);
 
         // icon stats
