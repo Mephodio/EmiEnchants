@@ -9,20 +9,20 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.IntStream;
+
+import static pm.meh.emienchants.Util.getBookStackForLevel;
+import static pm.meh.emienchants.Util.getLocalizedTextByCode;
 
 public class EnchantmentEmiRecipe implements EmiRecipe {
 
@@ -57,7 +57,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                 .map(ItemStack::new).filter(enchantment::canEnchant).map(EmiStack::of).toList());
         incompatibleSlot = EmiIngredient.of(BuiltInRegistries.ENCHANTMENT.entrySet().stream()
                 .filter(e -> !e.getValue().equals(enchantment) && !enchantment.isCompatibleWith(e.getValue()))
-                .map(e -> getBookForLevel(e.getKey().location(), e.getValue().getMaxLevel())).toList());
+                .map(e -> getBookStackForLevel(e.getKey().location(), e.getValue().getMaxLevel())).toList());
         iconStats = List.of(
                 new IconBoolStatEntry(ICON_ENCH_TABLE, "discoverable", enchantment.isDiscoverable(), true),
                 new IconBoolStatEntry(ICON_VILLAGER, "tradeable", enchantment.isTradeable(), true),
@@ -81,24 +81,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
     }
 
     private EmiStack getBookForLevel(int level) {
-        return getBookForLevel(enchantmentResourceLocation, level);
-    }
-
-    private static EmiStack getBookForLevel(ResourceLocation location, int level) {
-        CompoundTag tagEnchantEntry = new CompoundTag();
-        tagEnchantEntry.putString("id", location.toString());
-        tagEnchantEntry.putShort("lvl", (short) level);
-
-        ListTag tagStoredEnchantments = new ListTag();
-        tagStoredEnchantments.add(tagEnchantEntry);
-
-        CompoundTag tagItem = new CompoundTag();
-        tagItem.put("StoredEnchantments", tagStoredEnchantments);
-
-        ItemStack item = new ItemStack(Items.ENCHANTED_BOOK);
-        item.setTag(tagItem);
-
-        return EmiStack.of(item);
+        return getBookStackForLevel(enchantmentResourceLocation, level);
     }
 
     @Override
@@ -143,29 +126,39 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
     public void addWidgets(WidgetHolder widgetHolder) {
         int row = 0;
 
+        // enchantment slot
         widgetHolder.addSlot(getBookForLevel(enchantment.getMaxLevel()), LAYOUT_X_OFFSET_SMALL, LAYOUT_Y_OFFSET);
+        // applicable items slot
         widgetHolder.add(new CustomEmiSlotWidget(canApplyTo, LAYOUT_X_OFFSET_SMALL, LAYOUT_Y_OFFSET + 20,
                 false, Component.translatable("emienchants.property.applicable_to")));
-
+        // incompatible enchants slot
         if (!incompatibleSlot.isEmpty()) {
             widgetHolder.add(new CustomEmiSlotWidget(incompatibleSlot, LAYOUT_X_OFFSET_SMALL, LAYOUT_Y_OFFSET + 40,
                     true, Component.translatable("emienchants.property.conflicts")));
         }
 
+        // enchantment name and level range
         MutableComponent title = Component.translatable(enchantment.getDescriptionId());
         if (enchantment.getMaxLevel() > 1) {
-            title = title.append(String.format(" %d-%d", enchantment.getMinLevel(), enchantment.getMaxLevel()));
+            title = title.append(String.format(" §5%d-%d", enchantment.getMinLevel(), enchantment.getMaxLevel()));
         }
         widgetHolder.addText(title, LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row++, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
 
+        // mod id
         widgetHolder.addText(Component.literal(enchantmentResourceLocation.getNamespace()).withStyle(ChatFormatting.DARK_BLUE),
                 LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row++, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
 
-        widgetHolder.addText(Component.translatable("emienchants.property.category", enchantment.category.name()),
+        //category
+        widgetHolder.addText(Component.translatable("emienchants.property.category",
+                        getLocalizedTextByCode(enchantment.category.name(),
+                                "emienchants.property.category.%s").withStyle(ChatFormatting.DARK_PURPLE)),
                 LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row++, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
 
+        // rarity
         TextWidget rarityWidget = widgetHolder.addText(Component.translatable("emienchants.property.rarity",
-                enchantment.getRarity().name(), enchantment.getRarity().getWeight()),
+                        getLocalizedTextByCode(enchantment.getRarity().name(),
+                                "emienchants.property.rarity.%s").withStyle(ChatFormatting.DARK_PURPLE),
+                        enchantment.getRarity().getWeight()),
                 LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
         widgetHolder.addTexture(ICON_INFO, LAYOUT_X_OFFSET + rarityWidget.getBounds().width() + 1,
                 LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row, 7, 8, 7, 8, 7, 8, 7, 8);
@@ -173,6 +166,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                         (Component) Component.translatable("emienchants.property.cost", lvl, enchantment.getMinCost(lvl), enchantment.getMaxCost(lvl))).toList(),
                 LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row++, rarityWidget.getBounds().width() + 9, 8);
 
+        // icon stats
         int iconSectionWidth = (getDisplayWidth() - LAYOUT_X_OFFSET - LAYOUT_X_OFFSET_SMALL) / iconStats.size();
         int iconXOffset = LAYOUT_X_OFFSET;
         int iconYOffset = LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row;
@@ -184,6 +178,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
             iconXOffset += iconSectionWidth;
         }
 
+        // description
         row = 0;
         for (FormattedCharSequence line : description) {
             widgetHolder.addText(line, LAYOUT_X_OFFSET_SMALL, LAYOUT_DESCRIPTION_OFFSET + LAYOUT_ROW_HEIGHT * row++,
