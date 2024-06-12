@@ -11,5 +11,8 @@
   "emienchants.property.conflicts": "Conflicts:",
   "emienchants.property.applicable_to": "Applicable to:",
 
+  "emienchants.property.value.true": "YES",
+  "emienchants.property.value.false": "NO",
+
   "emienchants.slot.subtitle.view_all": "click to view all"
 }
