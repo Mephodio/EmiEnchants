@@ -12,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -126,9 +127,11 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                     true, Component.translatable("emienchants.property.conflicts")));
         }
 
-        widgetHolder.addText(Component.translatable(enchantment.getDescriptionId()).append(String.format(" %d-%d",
-                        enchantment.getMinLevel(), enchantment.getMaxLevel())),
-                xOffset, yOffset + rowHeight * row++, textColor, shadow);
+        MutableComponent title = Component.translatable(enchantment.getDescriptionId());
+        if (enchantment.getMaxLevel() > 1) {
+            title = title.append(String.format(" %d-%d", enchantment.getMinLevel(), enchantment.getMaxLevel()));
+        }
+        widgetHolder.addText(title, xOffset, yOffset + rowHeight * row++, textColor, shadow);
 
         widgetHolder.addText(Component.literal(enchantmentResourceLocation.getNamespace()).withStyle(ChatFormatting.DARK_BLUE),
                 xOffset, yOffset + rowHeight * row++, textColor, shadow);
