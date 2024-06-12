@@ -13,7 +13,7 @@
         "homepage": "${discord}"
     },
     "license": "${license}",
-    "icon": "${mod_id}.png",
+    "icon": "icon.png",
     "environment": "client",
     "entrypoints": {
         "main": [
