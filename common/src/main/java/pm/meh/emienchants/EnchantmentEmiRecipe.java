@@ -71,11 +71,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                 new IconBoolStatEntry(ICON_CURSE, "curse", enchantment.isCurse(), false)
         );
 
-        if (incompatibleSlot.isEmpty()) {
-            LAYOUT_DESCRIPTION_OFFSET = LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * 5 + LAYOUT_X_OFFSET_SMALL;
-        } else {
-            LAYOUT_DESCRIPTION_OFFSET = LAYOUT_Y_OFFSET + 60;
-        }
+        LAYOUT_DESCRIPTION_OFFSET = LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * (incompatibleSlot.isEmpty() ? 5 : 6);
 
         String descriptionId = enchantment.getDescriptionId() + ".desc";
         Component descriptionTranslatable = Component.translatable(descriptionId).withStyle(ChatFormatting.ITALIC);
@@ -117,15 +113,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
 
     @Override
     public int getDisplayHeight() {
-        if (description.isEmpty()) {
-            if (incompatibleSlot.isEmpty()) {
-                return LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * 5;
-            } else {
-                return LAYOUT_Y_OFFSET + 60;
-            }
-        } else {
-            return LAYOUT_DESCRIPTION_OFFSET + LAYOUT_ROW_HEIGHT * description.size();
-        }
+        return LAYOUT_DESCRIPTION_OFFSET + LAYOUT_ROW_HEIGHT * description.size();
     }
 
     @Override
@@ -174,15 +162,31 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                 LAYOUT_X_OFFSET, LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row++, rarityWidget.getBounds().width() + 9, 8);
 
         // icon stats
-        int iconSectionWidth = (getDisplayWidth() - LAYOUT_X_OFFSET - LAYOUT_X_OFFSET_SMALL) / iconStats.size();
-        int iconXOffset = LAYOUT_X_OFFSET;
+        int iconSectionWidth = 0;
+        int iconXOffset = 0;
+        if (incompatibleSlot.isEmpty()) {
+            iconSectionWidth = (getDisplayWidth() - LAYOUT_X_OFFSET_SMALL * 2) / iconStats.size();
+            iconXOffset = LAYOUT_X_OFFSET_SMALL;
+        } else {
+            iconSectionWidth = (getDisplayWidth() - LAYOUT_X_OFFSET - LAYOUT_X_OFFSET_SMALL) / 3;
+            iconXOffset = LAYOUT_X_OFFSET;
+        }
         int iconYOffset = LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row;
+        int iconCounter = 0;
+
         for (IconBoolStatEntry stat : iconStats) {
             widgetHolder.addTexture(stat.icon, iconXOffset, iconYOffset, 8, 8, 8, 8, 8, 8, 8, 8);
-            TextWidget statWidget = widgetHolder.addText(stat.getValueLabel(), iconXOffset + 9, iconYOffset, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
+            TextWidget statWidget = widgetHolder.addText(stat.getValueLabel(), iconXOffset + 10, iconYOffset, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
             widgetHolder.addTooltipText(List.of(Component.translatable(String.format("emienchants.property.%s.%s", stat.label, stat.value))),
                     iconXOffset, iconYOffset, statWidget.getBounds().width() + 10, 8);
-            iconXOffset += iconSectionWidth;
+            iconCounter += 1;
+            if (!incompatibleSlot.isEmpty() && iconCounter == 3) {
+                iconCounter = 0;
+                iconXOffset = LAYOUT_X_OFFSET;
+                iconYOffset += LAYOUT_ROW_HEIGHT;
+            } else {
+                iconXOffset += iconSectionWidth;
+            }
         }
 
         // description
