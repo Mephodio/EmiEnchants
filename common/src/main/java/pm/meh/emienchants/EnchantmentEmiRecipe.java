@@ -30,6 +30,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
     private static final ResourceLocation ICON_INFO = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_info.png");
     private static final ResourceLocation ICON_ENCH_TABLE = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_ench_table.png");
     private static final ResourceLocation ICON_VILLAGER = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_villager.png");
+    private static final ResourceLocation ICON_DISCOVERABLE = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_discoverable.png");
     private static final ResourceLocation ICON_TREASURE = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_treasure.png");
     private static final ResourceLocation ICON_CURSE = new ResourceLocation(Common.MOD_ID, "textures/gui/icon_curse.png");
 
@@ -63,8 +64,9 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
                 .filter(e -> !e.getValue().equals(enchantment) && !enchantment.isCompatibleWith(e.getValue()))
                 .map(e -> getBookStackForLevel(e.getKey().location(), e.getValue().getMaxLevel())).toList());
         iconStats = List.of(
-                new IconBoolStatEntry(ICON_ENCH_TABLE, "discoverable", enchantment.isDiscoverable(), true),
+                new IconBoolStatEntry(ICON_ENCH_TABLE, "ench_table", enchantment.isDiscoverable() && !enchantment.isTreasureOnly(), true),
                 new IconBoolStatEntry(ICON_VILLAGER, "tradeable", enchantment.isTradeable(), true),
+                new IconBoolStatEntry(ICON_DISCOVERABLE, "discoverable", enchantment.isDiscoverable(), true),
                 new IconBoolStatEntry(ICON_TREASURE, "treasure", enchantment.isTreasureOnly(), false),
                 new IconBoolStatEntry(ICON_CURSE, "curse", enchantment.isCurse(), false)
         );
@@ -177,7 +179,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
         int iconYOffset = LAYOUT_Y_OFFSET + LAYOUT_ROW_HEIGHT * row;
         for (IconBoolStatEntry stat : iconStats) {
             widgetHolder.addTexture(stat.icon, iconXOffset, iconYOffset, 8, 8, 8, 8, 8, 8, 8, 8);
-            TextWidget statWidget = widgetHolder.addText(stat.getValueLabel(), iconXOffset + 10, iconYOffset, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
+            TextWidget statWidget = widgetHolder.addText(stat.getValueLabel(), iconXOffset + 9, iconYOffset, LAYOUT_TEXT_COLOR, LAYOUT_TEXT_SHADOW);
             widgetHolder.addTooltipText(List.of(Component.translatable(String.format("emienchants.property.%s.%s", stat.label, stat.value))),
                     iconXOffset, iconYOffset, statWidget.getBounds().width() + 10, 8);
             iconXOffset += iconSectionWidth;
