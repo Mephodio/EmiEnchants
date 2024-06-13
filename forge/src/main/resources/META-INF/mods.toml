@@ -24,3 +24,9 @@ mandatory = true
 versionRange = "${forge_minecraft_version_range}"
 ordering = "NONE"
 side = "CLIENT"
+[[dependencies.${mod_id}]]
+modId = "emi"
+mandatory = true
+versionRange = "[1,)"
+ordering = "NONE"
+side = "CLIENT"
