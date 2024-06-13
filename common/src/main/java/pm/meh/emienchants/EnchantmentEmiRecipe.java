@@ -41,6 +41,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
     private static final boolean LAYOUT_TEXT_SHADOW = false;
     private final int LAYOUT_DESCRIPTION_OFFSET;
 
+    private final ResourceLocation id;
     private final ResourceLocation enchantmentResourceLocation;
     private final Enchantment enchantment;
     private final List<EmiStack> inputs;
@@ -52,6 +53,8 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
     public EnchantmentEmiRecipe(ResourceLocation location, Enchantment enchantment) {
         enchantmentResourceLocation = location;
         this.enchantment = enchantment;
+
+        id = new ResourceLocation(Common.MOD_ID, String.format("/%s/%s", location.getNamespace(), location.getPath()));
 
         inputs = IntStream.range(1, enchantment.getMaxLevel() + 1).mapToObj(this::getBookForLevel).toList();
         canApplyTo = EmiIngredient.of(BuiltInRegistries.ITEM.stream()
@@ -92,7 +95,7 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
 
     @Override
     public @Nullable ResourceLocation getId() {
-        return enchantmentResourceLocation;
+        return id;
     }
 
     @Override
