@@ -8,7 +8,7 @@ import dev.emi.emi.api.widget.TextWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -58,9 +58,9 @@ public class EnchantmentEmiRecipe implements EmiRecipe {
         id = new ResourceLocation(Common.MOD_ID, String.format("/%s/%s", location.getNamespace(), location.getPath()));
 
         inputs = IntStream.range(1, enchantment.getMaxLevel() + 1).mapToObj(this::getBookForLevel).toList();
-        canApplyTo = EmiIngredient.of(BuiltInRegistries.ITEM.stream()
+        canApplyTo = EmiIngredient.of(Registry.ITEM.stream()
                 .map(ItemStack::new).filter(enchantment::canEnchant).map(EmiStack::of).toList());
-        incompatibleSlot = EmiIngredient.of(BuiltInRegistries.ENCHANTMENT.entrySet().stream()
+        incompatibleSlot = EmiIngredient.of(Registry.ENCHANTMENT.entrySet().stream()
                 .filter(e -> !e.getValue().equals(enchantment) && !enchantment.isCompatibleWith(e.getValue()))
                 .map(e -> getBookStackForLevel(e.getKey().location(), e.getValue().getMaxLevel())).toList());
         iconStats = List.of(
